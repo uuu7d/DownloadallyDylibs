@@ -1,0 +1,37 @@
+name: Build Tweak
+
+# يتحكم هذا القسم في وقت تشغيل الـ Action
+# في هذه الحالة، سيتم تشغيله مع كل عملية push إلى الفرع الرئيس (main)
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    #سيتم تشغيل عملية البناء على أحدث نسخة من نظام macOS
+    runs-on: macos-latest
+
+    steps:
+      # الخطوة 1: استنساخ كود المشروع إلى بيئة البناء
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # الخطوة 2: تثبيت Theos وكل الأدوات المطلوبة باستخدام Action جاهزة
+      # هذا يغنيك عن تثبيت الأدوات يدويًا
+      - name: Setup Theos
+        uses: Randomblock1/theos-action@v1
+
+      # الخطوة 3: بناء المشروع وإنشاء حزمة .deb
+      # هذا الأمر هو نفسه الذي تستخدمه محليًا
+      - name: Build Package
+        run: make package
+
+      # الخطوة 4: رفع الملفات الناتجة (deb) كـ "Artifacts"
+      # هذا سيتيح لك تحميلها مباشرة من صفحة الـ Action بعد انتهاء البناء
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: EnjoyWithQRM-Deb
+          path: ./packages/*.deb
