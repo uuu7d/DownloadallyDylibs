@@ -33,5 +33,5 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: EnjoyWithQRM-Deb
+          name: musically-Deb
           path: ./packages/*.deb
